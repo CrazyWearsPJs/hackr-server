@@ -10,7 +10,6 @@ import (
 
 func main() {
 	m := martini.Classic()
-	connect()
     m.Get("/", helloHandler)
 	m.Run()
 }
@@ -18,7 +17,7 @@ func main() {
 func helloHandler() (int, string) {
 	return 200, "Hello World"
 }
-
+/*
 func connect() {
     if uri == ""{
         fmt.Println("no connection string provided")
@@ -32,4 +31,4 @@ func connect() {
     }
     defer sess.Close()
 }
-
+*/
