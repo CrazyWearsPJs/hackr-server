@@ -1,0 +1,20 @@
+{
+	"ImportPath": "github.com/CrazyWearsPJs/hackr",
+	"GoVersion": "go1.3",
+	"Deps": [
+		{
+			"ImportPath": "github.com/codegangsta/inject",
+			"Comment": "v1.0-rc1-4-g4b81725",
+			"Rev": "4b8172520a03fa190f427bbd284db01b459bfce7"
+		},
+		{
+			"ImportPath": "github.com/go-martini/martini",
+			"Comment": "v1.0-35-gab12482",
+			"Rev": "ab1248205f79d286d7ce99c8b69be576e6b5eb11"
+		},
+		{
+			"ImportPath": "gopkg.in/mgo.v2",
+			"Rev": "dc255bb679efa273b6544a03261c4053505498a4"
+		}
+	]
+}
