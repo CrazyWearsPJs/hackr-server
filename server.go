@@ -24,6 +24,7 @@ func main() {
     defer sess.Close()
 
     m := martini.Classic()
+    m.Use(martini.Static("app"))
     m.Get("/", helloHandler)
 	m.Run()
 }
