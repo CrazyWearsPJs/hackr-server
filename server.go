@@ -33,7 +33,7 @@ func main() {
 
 	n := negroni.New(negroni.NewRecovery(), negroni.NewLogger(), negroni.NewStatic(http.Dir("app")))
 	n.UseHandler(mux)
-	n.Run(":3000")
+    n.Run(":" + os.Getenv("PORT"))
 }
 
 func SetupRedis() redis.Conn {
