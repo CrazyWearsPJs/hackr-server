@@ -1,7 +1,7 @@
 package main
 
 import (
-	_ "fmt"
+	 "fmt"
 	_ "github.com/codegangsta/negroni"
 	_ "github.com/garyburd/redigo/redis"
 	_ "gopkg.in/mgo.v2"
@@ -13,10 +13,15 @@ import (
 
 func SetupMux() *http.ServeMux {
 	server_mux := http.NewServeMux()
-	server_mux.HandleFunc("/login", LoginHandler)
+	server_mux.HandleFunc("/", IndexHandler)
+    server_mux.HandleFunc("/login", LoginHandler)
 	return server_mux
 }
 
+func IndexHandler(res http.ResponseWriter, req *http.Request){
+    fmt.Fprintf(res, "Hello There")
+}
+
 func LoginHandler(res http.ResponseWriter, req *http.Request) {
-	return
+	fmt.Fprintf(res, "hi")
 }
