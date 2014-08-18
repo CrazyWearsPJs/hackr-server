@@ -10,11 +10,18 @@ angular.module('appControllers', ['loginController'])
 });
 
 angular.module('loginController', [])
-.controller('loginCtrl', function($scope, $modalInstance){
+.controller('loginCtrl', function($scope, $rootScope, $modalInstance, AuthService){
+    
+    $scope.credentials = {
+        email: "",
+        password: ""
+    };
+  
+    $scope.login = function(credentials) {
+        AuthService.login(credentials);
+    };
 
-  $scope.ok = function() {
-    $modalInstance.close();
-  };
+
 
   $scope.cancel = function(){
     $modalInstance.dismiss('cancel');

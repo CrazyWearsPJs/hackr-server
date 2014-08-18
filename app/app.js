@@ -1,9 +1,12 @@
-angular.module('app', ['ngRoute', 'ui.bootstrap', 'appControllers'])
-  .config(function($routeProvider){
-    $routeProvider.when('/', {
-    controller: 'splashCtrl',
-    templateUrl: './templates/splash.html'
+angular.module('app', ['ui.router', 'ui.bootstrap', 'appControllers', 'appDirectives"])
+  .config(function($stateProvider, $urlRouterProvider){
+    $stateProvider
+    .state('splash', {
+        url: "",
+        controller: 'splashCtrl',
+        templateUrl: './templates/splash.html'
     });
-    $routeProvider.otherwise({redirectTo: '/'});
+
+    $urlRouterProvider.otherwise("");
   })
   .constant('_', window._);

@@ -1,10 +1,22 @@
 <div class="modal-header">
-    <h3 class="modal-title">This is the title</h3>
+    <h3 class="modal-title">Sign In</h3>
 </div>
 <div class="modal-body">
-    <p>Nothing here yet</p>
+    <iframe src="sink.html" name="sink" style="display:none"></iframe>
+
+    <form name="loginForm" action="sink.html" target="sink" method="post"  ng-submit="login(credentials)" novalidate form-autofill-fix>
+        <div class="form-group">
+        <label for="email">Email</label>
+        <input type="text" id="email" class="form-control" ng-model="credentials.username" placeholder="e.g. jdoe63@ucr.edu">
+    </div>
+    <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" class="form-control" id="password" ng-model="credentials.password">
+    </div>
+        <button type="submit" class="btn btn-default">Login</button>
+    </form>
+
 </div>
 <div class="modal-footer">
-    <button class ="btn btn-primary" ng-click="ok()">OK</button>
     <button class="btn btn-warning"  ng-click="cancel()">Cancel</button>
 </div>
