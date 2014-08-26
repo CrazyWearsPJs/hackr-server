@@ -57,13 +57,13 @@ func SubmissionHandler(res http.ResponseWriter, req *http.Request) {
 		res.Header().Set("Access-Control-Allow-Origin", "*")
 		res.Header().Set("Access-Control-Allow-Headers", "X-Requested-With")
 		res.Header().Set("Content-Type", "application/json")
-
+		res.WriteHeader(http.StatusCreated)
 		encoder := json.NewEncoder(res)
 		if err := encoder.Encode(sres); err != nil {
 			log.Printf("Error parsing response: %v", err)
 			res.WriteHeader(http.StatusInternalServerError)
 		}
-		res.WriteHeader(http.StatusCreated)
+
 	default:
 		res.WriteHeader(http.StatusBadRequest)
 	}
