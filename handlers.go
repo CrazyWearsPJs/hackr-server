@@ -63,10 +63,10 @@ func PostSubmissionHandler(res http.ResponseWriter, req *http.Request) {
 	}
 
 	u, err := Users.FindUserByEmail(sreq.Email)
-	//if err != nil || sreq.Key != u.APIKey {
-	//	res.WriteHeader(http.StatusForbidden)
-	//	return
-	//}
+	if err != nil || sreq.Key != u.APIKey {
+		res.WriteHeader(http.StatusForbidden)
+		return
+	}
 
 	fmt.Printf("User data: %v", *u)
 
