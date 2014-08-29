@@ -83,8 +83,8 @@ func PostSubmissionHandler(res http.ResponseWriter, req *http.Request) {
 
 	sres := submitResponse{Status: "OK", Error: "None"}
 
-	//res.Header().Set("Access-Control-Allow-Origin", "*")
-	//res.Header().Set("Access-Control-Allow-Headers", "X-Requested-With")
+	res.Header().Set("Access-Control-Allow-Origin", "*")
+	res.Header().Set("Access-Control-Allow-Headers", "X-Requested-With")
 	res.Header().Set("Content-Type", "application/json")
 	res.WriteHeader(http.StatusCreated)
 	encoder := json.NewEncoder(res)
