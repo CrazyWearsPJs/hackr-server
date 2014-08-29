@@ -14,6 +14,7 @@ type User struct {
 	HashedPassword string        `bson:"pass"`
 	APIKey         string        `bson:"key"`
 	Created        time.Time     `bson:"created"`
+	Updated        time.Time     `bson:"updated"`
 	Code           []string      `bson:"code"`
 }
 
@@ -27,7 +28,8 @@ func New(email, password []byte) (*User, error) {
 	s_hashed_password := string(hashed_password)
 	api_key := uuid.New()
 	created := time.Now()
+	updated := created
 	code := []string{}
 
-	return &User{id, s_email, s_hashed_password, api_key, created, code}, nil
+	return &User{id, s_email, s_hashed_password, api_key, created, updated, code}, nil
 }

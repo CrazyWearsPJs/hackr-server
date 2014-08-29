@@ -8,7 +8,7 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/CrazyWearsPJs/hackr/models/user"
+	_ "github.com/CrazyWearsPJs/hackr/models/user"
 	"github.com/CrazyWearsPJs/hackr/repo"
 	"github.com/codegangsta/negroni"
 	"github.com/garyburd/redigo/redis"
@@ -42,12 +42,6 @@ func main() {
 
 	mongo_db := mongo_conn.DB(hackrdb)
 	Users = &repo.UserRepo{Collection: mongo_db.C("users")}
-	u, err := user.New([]byte("agonz056@ucr.edu"), []byte("123"))
-	if err != nil {
-		panic(err)
-	}
-
-	Users.Add(u)
 
 	n := negroni.New(negroni.NewRecovery(), negroni.NewLogger(), negroni.NewStatic(http.Dir("app")))
 	n.UseHandler(mux)

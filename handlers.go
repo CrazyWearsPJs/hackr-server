@@ -62,8 +62,20 @@ func PostSubmissionHandler(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	u, err := Users.FindUserByEmail(sreq.Email)
+	if err != nil || sreq.Key != u.APIKey {
+		res.WriteHeader(http.StatusForbidden)
+		return
+	}
+
 	if len(sreq.Code) > 20*Kb {
 		res.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	_, err = Users.SubmitCode(u.Email, sreq.Code)
+	if err != nil {
+		res.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
