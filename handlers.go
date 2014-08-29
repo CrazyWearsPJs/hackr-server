@@ -13,6 +13,10 @@ import (
 	_ "os"
 )
 
+const (
+	Kb = 1024
+)
+
 func SetupMux() *http.ServeMux {
 	server_mux := http.NewServeMux()
 	server_mux.HandleFunc("/", IndexHandler)
@@ -41,30 +45,38 @@ type submitRequest struct {
 }
 
 func SubmissionHandler(res http.ResponseWriter, req *http.Request) {
-	var sreq *submitRequest
-
 	switch req.Method {
 	case "POST":
-		decoder := json.NewDecoder(req.Body)
-		if err := decoder.Decode(&sreq); err != nil {
-			log.Printf("Error parsing response: %v", err)
-			res.WriteHeader(http.StatusBadRequest)
-			return
-		}
-
-		sres := submitResponse{Status: "OK", Error: "None"}
-
-		res.Header().Set("Access-Control-Allow-Origin", "*")
-		res.Header().Set("Access-Control-Allow-Headers", "X-Requested-With")
-		res.Header().Set("Content-Type", "application/json")
-		res.WriteHeader(http.StatusCreated)
-		encoder := json.NewEncoder(res)
-		if err := encoder.Encode(sres); err != nil {
-			log.Printf("Error parsing response: %v", err)
-			res.WriteHeader(http.StatusInternalServerError)
-		}
-
+		PostSubmissionHandler(res, req)
 	default:
 		res.WriteHeader(http.StatusBadRequest)
+	}
+}
+
+func PostSubmissionHandler(res http.ResponseWriter, req *http.Request) {
+	var sreq *submitRequest
+	decoder := json.NewDecoder(req.Body)
+	if err := decoder.Decode(&sreq); err != nil {
+		log.Printf("Error parsing response: %v", err)
+		res.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	if len(sreq.Code) > 20*Kb {
+		res.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	log.Printf("Code: %v", sreq.Code)
+
+	sres := submitResponse{Status: "OK", Error: "None"}
+
+	//res.Header().Set("Access-Control-Allow-Origin", "*")
+	//res.Header().Set("Access-Control-Allow-Headers", "X-Requested-With")
+	res.Header().Set("Content-Type", "application/json")
+	res.WriteHeader(http.StatusCreated)
+	encoder := json.NewEncoder(res)
+	if err := encoder.Encode(sres); err != nil {
+		log.Printf("Error parsing response: %v", err)
 	}
 }

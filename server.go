@@ -2,14 +2,18 @@ package main
 
 import (
 	_ "fmt"
-	"github.com/codegangsta/negroni"
-	"github.com/garyburd/redigo/redis"
-	"gopkg.in/mgo.v2"
-	_ "gopkg.in/mgo.v2/bson"
 	"log"
 	"net/http"
 	"net/url"
 	"os"
+	"strconv"
+
+	"github.com/CrazyWearsPJs/hackr/models/user"
+	"github.com/CrazyWearsPJs/hackr/repo"
+	"github.com/codegangsta/negroni"
+	"github.com/garyburd/redigo/redis"
+	"gopkg.in/mgo.v2"
+	_ "gopkg.in/mgo.v2/bson"
 )
 
 var (
@@ -18,7 +22,12 @@ var (
 )
 
 var (
-	mux *http.ServeMux
+	Users *repo.UserRepo
+)
+
+const (
+	defaultPort = 3000
+	hackrdb     = "app28354182"
 )
 
 func main() {
@@ -31,9 +40,24 @@ func main() {
 	defer mongo_conn.Close()
 	defer redis_conn.Close()
 
+	mongo_db := mongo_conn.DB(hackrdb)
+	Users = &repo.UserRepo{Collection: mongo_db.C("users")}
+	u, err := user.New([]byte("agonz056@ucr.edu"), []byte("123"))
+	if err != nil {
+		panic(err)
+	}
+
+	Users.Add(u)
+
 	n := negroni.New(negroni.NewRecovery(), negroni.NewLogger(), negroni.NewStatic(http.Dir("app")))
 	n.UseHandler(mux)
-    n.Run(":" + os.Getenv("PORT"))
+
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = strconv.Itoa(defaultPort)
+	}
+
+	n.Run(":" + port)
 }
 
 func SetupRedis() redis.Conn {
@@ -60,7 +84,6 @@ func SetupMongo() *mgo.Session {
 	if err != nil {
 		log.Fatalf("Can't connect to mongo, got error %v\n", err)
 	}
-
 	return mongo_sess
 }
 
