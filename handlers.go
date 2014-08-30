@@ -65,14 +65,14 @@ func PostSubmissionHandler(res http.ResponseWriter, req *http.Request) {
 
 	u, err := Users.FindUserByEmail(sreq.Email)
 	if err != nil || sreq.Key != u.APIKey {
-		log.Printf("Couldn't FindUserByEmail: %v", err)
 		res.WriteHeader(http.StatusForbidden)
 		return
 	}
 
 	fmt.Printf("User data: %v", *u)
 
-	if len(sreq.Code) > 20*Kb {
+	if len(sreq.Code) > 200*Kb {
+		log.Println("File is too big!")
 		res.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -82,8 +82,6 @@ func PostSubmissionHandler(res http.ResponseWriter, req *http.Request) {
 		res.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-
-	log.Printf("Code: %v", sreq.Code)
 
 	sres := submitResponse{Status: "OK", Error: "None"}
 
