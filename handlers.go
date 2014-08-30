@@ -3,14 +3,15 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	_ "github.com/codegangsta/negroni"
-	_ "github.com/garyburd/redigo/redis"
-	_ "gopkg.in/mgo.v2"
-	_ "gopkg.in/mgo.v2/bson"
 	"log"
 	"net/http"
 	_ "net/url"
 	_ "os"
+
+	_ "github.com/codegangsta/negroni"
+	_ "github.com/garyburd/redigo/redis"
+	_ "gopkg.in/mgo.v2"
+	_ "gopkg.in/mgo.v2/bson"
 )
 
 const (
@@ -64,6 +65,7 @@ func PostSubmissionHandler(res http.ResponseWriter, req *http.Request) {
 
 	u, err := Users.FindUserByEmail(sreq.Email)
 	if err != nil || sreq.Key != u.APIKey {
+		log.Printf("Couldn't FindUserByEmail: %v", err)
 		res.WriteHeader(http.StatusForbidden)
 		return
 	}
