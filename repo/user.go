@@ -1,10 +1,11 @@
 package repo
 
 import (
+	"time"
+
 	"github.com/CrazyWearsPJs/hackr/models/user"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
-	"time"
 )
 
 type UserRepo struct {
@@ -25,16 +26,16 @@ func (r UserRepo) Add(u *user.User) error {
 }
 
 func (r UserRepo) FindUserByEmail(email string) (*user.User, error) {
-	var u *user.User
-	err := r.Collection.Find(bson.M{"email": email}).One(u)
+	var u user.User
+	err := r.Collection.Find(bson.M{"email": email}).One(&u)
 	if err != nil {
 		return nil, err
 	}
-	return u, nil
+	return &u, nil
 }
 
 func (r UserRepo) SubmitCode(email string, code string) (*user.User, error) {
-	var u *user.User
+	var u user.User
 
 	change := mgo.Change{
 		ReturnNew: true,
@@ -48,9 +49,9 @@ func (r UserRepo) SubmitCode(email string, code string) (*user.User, error) {
 		},
 	}
 
-	_, err := r.Collection.Find(bson.M{"email": email}).Apply(change, u)
+	_, err := r.Collection.Find(bson.M{"email": email}).Apply(change, &u)
 	if err != nil {
 		return nil, err
 	}
-	return u, nil
+	return &u, nil
 }
