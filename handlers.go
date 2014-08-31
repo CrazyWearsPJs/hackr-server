@@ -9,7 +9,7 @@ import (
 	"log"
 	"net/http"
 	_ "net/url"
-	_ "os"
+	"os"
 
 	_ "github.com/codegangsta/negroni"
 	_ "github.com/garyburd/redigo/redis"
@@ -127,16 +127,14 @@ func compressCode(code string) (string, error) {
 
 func uncompressCode(code string) (string, error) {
 	b := bytes.NewBufferString(code)
-	var uncompresed []byte
-	gunz, err := gzip.NewReader(&b)
+	//var uncompressed bytes.Buffer
+	gunz, err := gzip.NewReader(b)
 	if err != nil {
 		return "", err
 	}
 	defer gunz.Close()
 
-	if _, err := gunz.Read(uncompresed); err != nil {
-		return string(uncompresed), err
-	}
+	io.Copy(os.Stdout, gunz)
 
-	return string(uncompresed), nil
+	return "", nil
 }
