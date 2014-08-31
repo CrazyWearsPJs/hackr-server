@@ -84,8 +84,8 @@ func PostSubmissionHandler(res http.ResponseWriter, req *http.Request) {
 		res.WriteHeader(http.StatusInternalServerError)
 	}
 
-	fmt.Printf("Compressed Code: %v\n", compressed_code)
-	fmt.Printf("Uncompressed Code: %v\n", uncompressed_code)
+	fmt.Printf("Compressed Code: %s\n", compressed_code)
+	fmt.Printf("Uncompressed Code: %s\n", uncompressed_code)
 
 	if len(compressed_code) > 20*Kb {
 		log.Println("File is too big!")
@@ -114,12 +114,13 @@ func PostSubmissionHandler(res http.ResponseWriter, req *http.Request) {
 func compressCode(code string) (string, error) {
 	var b bytes.Buffer
 	compress := zlib.NewWriter(&b)
-	defer compress.Close()
 
 	_, err := compress.Write([]byte(code))
 	if err != nil {
 		return b.String(), err
 	}
+
+	compress.Close()
 
 	return b.String(), nil
 }
@@ -134,6 +135,7 @@ func uncompressCode(code string) (string, error) {
 	}
 
 	io.Copy(&b, uncompress)
+	uncompress.Close()
 
 	return b.String(), nil
 }
