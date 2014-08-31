@@ -5,6 +5,7 @@ import (
 	"compress/gzip"
 	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	_ "net/url"
@@ -78,14 +79,14 @@ func PostSubmissionHandler(res http.ResponseWriter, req *http.Request) {
 		log.Printf("Compressing code failure: %v\n", err)
 		res.WriteHeader(http.StatusInternalServerError)
 	}
-	uncompress_code, err := uncompressCode(compressed_code)
+	uncompressed_code, err := uncompressCode(compressed_code)
 	if err != nil {
 		log.Printf("Uncompressing code failure: %v\n", err)
 		res.WriteHeader(http.StatusInternalServerError)
 	}
 
 	fmt.Printf("Compressed Code: %v\n", compressed_code)
-	fmt.Printf("Uncompressed Code: %v\n", uncompress_code)
+	fmt.Printf("Uncompressed Code: %v\n", uncompressed_code)
 
 	if len(compressed_code) > 20*Kb {
 		log.Println("File is too big!")
@@ -127,15 +128,15 @@ func compressCode(code string) (string, error) {
 func uncompressCode(code string) (string, error) {
 	b := bytes.NewBufferString(code)
 	var uncompresed []byte
-	gunz, err := gzip.NewReader(b)
+	gunz, err := gzip.NewReader(&b)
 	if err != nil {
 		return "", err
 	}
 	defer gunz.Close()
 
 	if _, err := gunz.Read(uncompresed); err != nil {
-		return string(uncompresed), err
+		return "", err
 	}
 
-	return string(uncompresed), nil
+	return "", nil
 }
