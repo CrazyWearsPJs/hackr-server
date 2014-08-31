@@ -135,8 +135,8 @@ func uncompressCode(code string) (string, error) {
 	defer gunz.Close()
 
 	if _, err := gunz.Read(uncompresed); err != nil {
-		return "", err
+		return string(uncompresed), err
 	}
 
-	return "", nil
+	return string(uncompresed), nil
 }
