@@ -2,14 +2,13 @@ package main
 
 import (
 	"bytes"
-	"compress/gzip"
+	"compress/zlib"
 	"encoding/json"
 	"fmt"
 	"io"
 	"log"
 	"net/http"
 	_ "net/url"
-	"os"
 
 	_ "github.com/codegangsta/negroni"
 	_ "github.com/garyburd/redigo/redis"
@@ -114,10 +113,10 @@ func PostSubmissionHandler(res http.ResponseWriter, req *http.Request) {
 
 func compressCode(code string) (string, error) {
 	var b bytes.Buffer
-	gz := gzip.NewWriter(&b)
-	defer gz.Close()
+	compress := zlib.NewWriter(&b)
+	defer compress.Close()
 
-	_, err := gz.Write([]byte(code))
+	_, err := compress.Write([]byte(code))
 	if err != nil {
 		return b.String(), err
 	}
@@ -126,15 +125,15 @@ func compressCode(code string) (string, error) {
 }
 
 func uncompressCode(code string) (string, error) {
-	b := bytes.NewBufferString(code)
-	//var uncompressed bytes.Buffer
-	gunz, err := gzip.NewReader(b)
+	var b bytes.Buffer
+	code_buffer := bytes.NewBufferString(code)
+
+	uncompress, err := zlib.NewReader(code_buffer)
 	if err != nil {
 		return "", err
 	}
-	defer gunz.Close()
 
-	io.Copy(os.Stdout, gunz)
+	io.Copy(&b, uncompress)
 
-	return "", nil
+	return b.String(), nil
 }
