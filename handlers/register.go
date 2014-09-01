@@ -38,6 +38,7 @@ func (h HackrMux) PostRegisterHandler(res http.ResponseWriter, req *http.Request
 	if err := decoder.Decode(&rreq); err != nil {
 		log.Printf("Error parsing registration request: %v\n", err)
 		res.WriteHeader(http.StatusBadRequest)
+		return
 	}
 
 	email := rreq.Email
@@ -46,12 +47,14 @@ func (h HackrMux) PostRegisterHandler(res http.ResponseWriter, req *http.Request
 	if err != nil {
 		log.Printf("Error creating new user object: %v", err)
 		res.WriteHeader(http.StatusInternalServerError)
+		return
 	}
 
 	err = h.Users.Add(u)
 	if err != nil {
 		log.Printf("Error, user already exists: %v", err)
 		res.WriteHeader(http.StatusForbidden)
+		return
 	}
 
 	res.WriteHeader(http.StatusCreated)

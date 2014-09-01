@@ -54,6 +54,7 @@ func (h HackrMux) PostSubmissionHandler(res http.ResponseWriter, req *http.Reque
 	u, err := h.Users.FindUserByEmail(sreq.Email)
 	if err != nil || sreq.Key != u.APIKey {
 		res.WriteHeader(http.StatusForbidden)
+		return
 	}
 
 	code := sreq.Code
@@ -62,6 +63,7 @@ func (h HackrMux) PostSubmissionHandler(res http.ResponseWriter, req *http.Reque
 	if err != nil {
 		log.Printf("Compressing code failure: %v\n", err)
 		res.WriteHeader(http.StatusInternalServerError)
+		return
 	}
 
 	if len(compressed_code) > 20*Kb {
@@ -70,8 +72,9 @@ func (h HackrMux) PostSubmissionHandler(res http.ResponseWriter, req *http.Reque
 		return
 	}
 
-	_, err = h.Users.SubmitCode(u.Email, compressed_code)
+	_, err = h.Users.SubmitCode(sreq.Email, compressed_code)
 	if err != nil {
+		log.Println("hi")
 		res.WriteHeader(http.StatusInternalServerError)
 		return
 	}

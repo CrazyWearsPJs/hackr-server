@@ -38,6 +38,7 @@ func (h HackrMux) PostLoginHandler(res http.ResponseWriter, req *http.Request) {
 	if err := decoder.Decode(&lreq); err != nil {
 		log.Printf("Error parsing login request: %v\n", err)
 		res.WriteHeader(http.StatusBadRequest)
+		return
 	}
 
 	email := lreq.Email
@@ -47,6 +48,7 @@ func (h HackrMux) PostLoginHandler(res http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		log.Printf("Error creating new user object: %v", err)
 		res.WriteHeader(http.StatusInternalServerError)
+		return
 	}
 
 	//err = r.Users.Login(u)
