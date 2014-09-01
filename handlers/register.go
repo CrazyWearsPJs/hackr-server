@@ -23,7 +23,7 @@ type registerRequest struct {
 	PlaintextPassword string `json::"password"`
 }
 
-func (h *HackrMux) RegisterHandler(res http.ResponseWriter, req *http.Request) {
+func (h HackrMux) RegisterHandler(res http.ResponseWriter, req *http.Request) {
 	switch req.Method {
 	case "POST":
 		h.PostRegisterHandler(res, req)
@@ -32,7 +32,7 @@ func (h *HackrMux) RegisterHandler(res http.ResponseWriter, req *http.Request) {
 	}
 }
 
-func (h *HackrMux) PostRegisterHandler(res http.ResponseWriter, req *http.Request) {
+func (h HackrMux) PostRegisterHandler(res http.ResponseWriter, req *http.Request) {
 	var rreq *registerRequest
 	decoder := json.NewDecoder(req.Body)
 	if err := decoder.Decode(&rreq); err != nil {

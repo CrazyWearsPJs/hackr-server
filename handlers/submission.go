@@ -33,7 +33,7 @@ type submitRequest struct {
 	Code  string `json::"code"`
 }
 
-func (h *HackrMux) SubmissionHandler(res http.ResponseWriter, req *http.Request) {
+func (h HackrMux) SubmissionHandler(res http.ResponseWriter, req *http.Request) {
 	switch req.Method {
 	case "POST":
 		h.PostSubmissionHandler(res, req)
@@ -42,7 +42,7 @@ func (h *HackrMux) SubmissionHandler(res http.ResponseWriter, req *http.Request)
 	}
 }
 
-func (h *HackrMux) PostSubmissionHandler(res http.ResponseWriter, req *http.Request) {
+func (h HackrMux) PostSubmissionHandler(res http.ResponseWriter, req *http.Request) {
 	var sreq *submitRequest
 	decoder := json.NewDecoder(req.Body)
 	if err := decoder.Decode(&sreq); err != nil {
