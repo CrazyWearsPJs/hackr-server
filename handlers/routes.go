@@ -23,6 +23,10 @@ var (
 	Users *repo.UserRepo
 )
 
+func SetUserRepo(*repo.UserRepo repo) {
+    Users = repo
+}
+
 func SetupMux() *http.ServeMux {
 	server_mux := http.NewServeMux()
 	server_mux.HandleFunc("/", IndexHandler)
