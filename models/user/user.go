@@ -18,10 +18,9 @@ type User struct {
 	Code           []string      `bson:"code"`
 }
 
-func New(email, password []byte) (*User, error) {
-	s_email := string(email)
+func New(email, password string) (*User, error) {
 	id := bson.NewObjectId()
-	hashed_password, err := bcrypt.GenerateFromPassword(password, bcrypt.DefaultCost)
+	hashed_password, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
 		return nil, err
 	}
@@ -31,5 +30,5 @@ func New(email, password []byte) (*User, error) {
 	updated := created
 	code := []string{}
 
-	return &User{id, s_email, s_hashed_password, api_key, created, updated, code}, nil
+	return &User{id, email, s_hashed_password, api_key, created, updated, code}, nil
 }

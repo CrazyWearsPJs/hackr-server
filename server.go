@@ -8,6 +8,7 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/CrazyWearsPJs/hackr/handlers"
 	_ "github.com/CrazyWearsPJs/hackr/models/user"
 	"github.com/CrazyWearsPJs/hackr/repo"
 	"github.com/codegangsta/negroni"
@@ -21,10 +22,6 @@ var (
 	mongo_conn *mgo.Session
 )
 
-var (
-	Users *repo.UserRepo
-)
-
 const (
 	defaultPort = 3000
 	hackrdb     = "app28354182"
@@ -35,13 +32,14 @@ func main() {
 	mongo_conn := SetupMongo()
 	redis_conn := SetupRedis()
 
-	mux := SetupMux()
-
 	defer mongo_conn.Close()
 	defer redis_conn.Close()
 
 	mongo_db := mongo_conn.DB(hackrdb)
-	Users = &repo.UserRepo{Collection: mongo_db.C("users")}
+	users_repo := &repo.UserRepo{Collection: mongo_db.C("users")}
+
+	handlers.Users = users_repo
+	mux := handlers.SetupMux()
 
 	n := negroni.New(negroni.NewRecovery(), negroni.NewLogger(), negroni.NewStatic(http.Dir("app")))
 	n.UseHandler(mux)

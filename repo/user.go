@@ -1,11 +1,12 @@
 package repo
 
 import (
-	"time"
-
+	"errors"
+	"fmt"
 	"github.com/CrazyWearsPJs/hackr/models/user"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
+	"time"
 )
 
 type UserRepo struct {
@@ -13,6 +14,14 @@ type UserRepo struct {
 }
 
 func (r UserRepo) Add(u *user.User) error {
+
+	u_repo, err := r.FindUserByEmail(u.Email)
+
+	if u_repo != nil || err != nil {
+		msg := fmt.Sprintf("User with the email %v already exists", u.Email)
+		return errors.New(msg)
+	}
+
 	if u.Id.Hex() == "" {
 		u.Id = bson.NewObjectId()
 	}
@@ -21,7 +30,7 @@ func (r UserRepo) Add(u *user.User) error {
 		u.Created = time.Now()
 	}
 
-	_, err := r.Collection.UpsertId(u.Id, u)
+	_, err = r.Collection.UpsertId(u.Id, u)
 	return err
 }
 
