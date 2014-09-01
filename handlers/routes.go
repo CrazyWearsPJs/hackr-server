@@ -23,8 +23,8 @@ var (
 	Users *repo.UserRepo
 )
 
-func SetUserRepo(*repo.UserRepo repo) {
-    Users = repo
+func SetUserRepo(r *repo.UserRepo) {
+	Users = r
 }
 
 func SetupMux() *http.ServeMux {
