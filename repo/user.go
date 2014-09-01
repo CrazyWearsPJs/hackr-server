@@ -3,10 +3,11 @@ package repo
 import (
 	"errors"
 	"fmt"
-	"github.com/CrazyWearsPJs/hackr/models/user"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 	"time"
+
+	"github.com/CrazyWearsPJs/hackr/models/user"
 )
 
 type UserRepo struct {
@@ -40,7 +41,6 @@ func (r UserRepo) FindUserByEmail(email string) (*user.User, error) {
 	if err != nil {
 		return nil, err
 	}
-	fmt.Printf("wat")
 	return &u, nil
 }
 

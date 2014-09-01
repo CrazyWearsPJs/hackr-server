@@ -1,21 +1,11 @@
 package handlers
 
 import (
-	"bytes"
-	"compress/zlib"
 	"encoding/json"
-	_ "fmt"
-	"io"
 	"log"
 	"net/http"
 
-	_ "github.com/CrazyWearsPJs/hackr/models/user"
-	_ "net/url"
-
-	_ "github.com/codegangsta/negroni"
-	_ "github.com/garyburd/redigo/redis"
-	_ "gopkg.in/mgo.v2"
-	_ "gopkg.in/mgo.v2/bson"
+	"github.com/CrazyWearsPJs/hackr/util"
 )
 
 const (
@@ -59,7 +49,7 @@ func (h HackrMux) PostSubmissionHandler(res http.ResponseWriter, req *http.Reque
 
 	code := sreq.Code
 
-	compressed_code, err := compressCode(code)
+	compressed_code, err := util.CompressString(code)
 	if err != nil {
 		log.Printf("Compressing code failure: %v\n", err)
 		res.WriteHeader(http.StatusInternalServerError)
@@ -74,7 +64,7 @@ func (h HackrMux) PostSubmissionHandler(res http.ResponseWriter, req *http.Reque
 
 	_, err = h.Users.SubmitCode(sreq.Email, compressed_code)
 	if err != nil {
-		log.Println("hi")
+		log.Printf("Error: Unable to submit exercise: %v!\n", err)
 		res.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -89,33 +79,4 @@ func (h HackrMux) PostSubmissionHandler(res http.ResponseWriter, req *http.Reque
 	if err := encoder.Encode(sres); err != nil {
 		log.Printf("Error parsing response: %v", err)
 	}
-}
-
-func compressCode(code string) (string, error) {
-	var b bytes.Buffer
-	compress := zlib.NewWriter(&b)
-
-	_, err := compress.Write([]byte(code))
-	if err != nil {
-		return b.String(), err
-	}
-
-	compress.Close()
-
-	return b.String(), nil
-}
-
-func uncompressCode(code string) (string, error) {
-	var b bytes.Buffer
-	code_buffer := bytes.NewBufferString(code)
-
-	uncompress, err := zlib.NewReader(code_buffer)
-	if err != nil {
-		return "", err
-	}
-
-	io.Copy(&b, uncompress)
-	uncompress.Close()
-
-	return b.String(), nil
 }

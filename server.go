@@ -1,7 +1,6 @@
 package main
 
 import (
-	_ "fmt"
 	"log"
 	"net/http"
 	"net/url"
@@ -9,12 +8,10 @@ import (
 	"strconv"
 
 	"github.com/CrazyWearsPJs/hackr/handlers"
-	_ "github.com/CrazyWearsPJs/hackr/models/user"
 	"github.com/CrazyWearsPJs/hackr/repo"
 	"github.com/codegangsta/negroni"
 	"github.com/garyburd/redigo/redis"
 	"gopkg.in/mgo.v2"
-	_ "gopkg.in/mgo.v2/bson"
 )
 
 var (
@@ -36,7 +33,8 @@ func main() {
 	defer redis_conn.Close()
 
 	mongo_db := mongo_conn.DB(hackrdb)
-	hackrMux := &handlers.HackrMux{Users: &repo.UserRepo{Collection: mongo_db.C("users")}}
+	users_repo := &repo.UserRepo{Collection: mongo_db.C("users")}
+	hackrMux := &handlers.HackrMux{Users: users_repo}
 	mux := hackrMux.SetupMux()
 
 	n := negroni.New(negroni.NewRecovery(), negroni.NewLogger(), negroni.NewStatic(http.Dir("app")))

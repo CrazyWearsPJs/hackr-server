@@ -1,11 +1,11 @@
 package user
 
 import (
+	"time"
+
 	"code.google.com/p/go-uuid/uuid"
 	"code.google.com/p/go.crypto/bcrypt"
 	"gopkg.in/mgo.v2/bson"
-	_ "os"
-	"time"
 )
 
 type User struct {

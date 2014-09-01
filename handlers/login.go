@@ -1,21 +1,11 @@
 package handlers
 
 import (
-	_ "bytes"
-	_ "compress/zlib"
 	"encoding/json"
-	_ "fmt"
-	_ "io"
 	"log"
 	"net/http"
 
 	"github.com/CrazyWearsPJs/hackr/models/user"
-	_ "net/url"
-
-	_ "github.com/codegangsta/negroni"
-	_ "github.com/garyburd/redigo/redis"
-	_ "gopkg.in/mgo.v2"
-	_ "gopkg.in/mgo.v2/bson"
 )
 
 type loginRequest struct {
