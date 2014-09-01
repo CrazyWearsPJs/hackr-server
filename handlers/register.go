@@ -23,16 +23,16 @@ type registerRequest struct {
 	PlaintextPassword string `json::"password"`
 }
 
-func RegisterHandler(res http.ResponseWriter, req *http.Request) {
+func (h *HackrMux) RegisterHandler(res http.ResponseWriter, req *http.Request) {
 	switch req.Method {
 	case "POST":
-		PostRegisterHandler(res, req)
+		h.PostRegisterHandler(res, req)
 	default:
 		res.WriteHeader(http.StatusMethodNotAllowed)
 	}
 }
 
-func PostRegisterHandler(res http.ResponseWriter, req *http.Request) {
+func (h *HackrMux) PostRegisterHandler(res http.ResponseWriter, req *http.Request) {
 	var rreq *registerRequest
 	decoder := json.NewDecoder(req.Body)
 	if err := decoder.Decode(&rreq); err != nil {
@@ -48,7 +48,7 @@ func PostRegisterHandler(res http.ResponseWriter, req *http.Request) {
 		res.WriteHeader(http.StatusInternalServerError)
 	}
 
-	err = Users.Add(u)
+	err = h.Users.Add(u)
 	if err != nil {
 		log.Printf("Error, user already exists: %v", err)
 		res.WriteHeader(http.StatusForbidden)

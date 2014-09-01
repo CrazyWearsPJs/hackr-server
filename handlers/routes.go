@@ -19,23 +19,19 @@ import (
 	_ "gopkg.in/mgo.v2/bson"
 )
 
-var (
+type HackrMux struct {
 	Users *repo.UserRepo
-)
-
-func SetUserRepo(r *repo.UserRepo) {
-	Users = r
 }
 
-func SetupMux() *http.ServeMux {
+func (h *HackrMux) SetupMux() *http.ServeMux {
 	server_mux := http.NewServeMux()
-	server_mux.HandleFunc("/", IndexHandler)
-	server_mux.HandleFunc("/api/v1/user/login", LoginHandler)
-	server_mux.HandleFunc("/api/v1/user/register", RegisterHandler)
-	server_mux.HandleFunc("/api/v1/user/exercises", SubmissionHandler)
+	server_mux.HandleFunc("/", h.IndexHandler)
+	server_mux.HandleFunc("/api/v1/user/login", h.LoginHandler)
+	server_mux.HandleFunc("/api/v1/user/register", h.RegisterHandler)
+	server_mux.HandleFunc("/api/v1/user/exercises", h.SubmissionHandler)
 	return server_mux
 }
 
-func IndexHandler(res http.ResponseWriter, req *http.Request) {
+func (h *HackrMux) IndexHandler(res http.ResponseWriter, req *http.Request) {
 	fmt.Fprintf(res, "Hello There")
 }

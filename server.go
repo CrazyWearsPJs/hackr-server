@@ -38,8 +38,8 @@ func main() {
 	mongo_db := mongo_conn.DB(hackrdb)
 	users_repo := &repo.UserRepo{Collection: mongo_db.C("users")}
 
-	handlers.SetUserRepo(users_repo)
-	mux := handlers.SetupMux()
+	hackrMux := handlers.HackrMux{Users: users_repo}
+	mux := hackrMux.SetupMux()
 
 	n := negroni.New(negroni.NewRecovery(), negroni.NewLogger(), negroni.NewStatic(http.Dir("app")))
 	n.UseHandler(mux)

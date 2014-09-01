@@ -33,16 +33,16 @@ type submitRequest struct {
 	Code  string `json::"code"`
 }
 
-func SubmissionHandler(res http.ResponseWriter, req *http.Request) {
+func (h *HackrMux) SubmissionHandler(res http.ResponseWriter, req *http.Request) {
 	switch req.Method {
 	case "POST":
-		PostSubmissionHandler(res, req)
+		h.PostSubmissionHandler(res, req)
 	default:
 		res.WriteHeader(http.StatusMethodNotAllowed)
 	}
 }
 
-func PostSubmissionHandler(res http.ResponseWriter, req *http.Request) {
+func (h *HackrMux) PostSubmissionHandler(res http.ResponseWriter, req *http.Request) {
 	var sreq *submitRequest
 	decoder := json.NewDecoder(req.Body)
 	if err := decoder.Decode(&sreq); err != nil {
@@ -51,7 +51,7 @@ func PostSubmissionHandler(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	u, err := Users.FindUserByEmail(sreq.Email)
+	u, err := h.Users.FindUserByEmail(sreq.Email)
 	if err != nil || sreq.Key != u.APIKey {
 		res.WriteHeader(http.StatusForbidden)
 	}
@@ -70,7 +70,7 @@ func PostSubmissionHandler(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	_, err = Users.SubmitCode(u.Email, compressed_code)
+	_, err = h.Users.SubmitCode(u.Email, compressed_code)
 	if err != nil {
 		res.WriteHeader(http.StatusInternalServerError)
 		return

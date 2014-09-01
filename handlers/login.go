@@ -23,16 +23,16 @@ type loginRequest struct {
 	PlaintextPassword string `json::"password"`
 }
 
-func LoginHandler(res http.ResponseWriter, req *http.Request) {
+func (h *HackrMux) LoginHandler(res http.ResponseWriter, req *http.Request) {
 	switch req.Method {
 	case "POST":
-		PostLoginHandler(res, req)
+		h.PostLoginHandler(res, req)
 	default:
 		res.WriteHeader(http.StatusMethodNotAllowed)
 	}
 }
 
-func PostLoginHandler(res http.ResponseWriter, req *http.Request) {
+func (h *HackrMux) PostLoginHandler(res http.ResponseWriter, req *http.Request) {
 	var lreq *loginRequest
 	decoder := json.NewDecoder(req.Body)
 	if err := decoder.Decode(&lreq); err != nil {
@@ -49,6 +49,6 @@ func PostLoginHandler(res http.ResponseWriter, req *http.Request) {
 		res.WriteHeader(http.StatusInternalServerError)
 	}
 
-	//err = Users.Login(u)
+	//err = r.Users.Login(u)
 	res.WriteHeader(http.StatusOK)
 }
