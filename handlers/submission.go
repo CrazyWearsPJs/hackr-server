@@ -23,7 +23,7 @@ type submitRequest struct {
 	Code  string `json::"code"`
 }
 
-func (h HackrMux) SubmissionHandler(res http.ResponseWriter, req *http.Request) {
+func (h HackrHandlers) SubmissionHandler(res http.ResponseWriter, req *http.Request) {
 	switch req.Method {
 	case "POST":
 		h.PostSubmissionHandler(res, req)
@@ -32,7 +32,7 @@ func (h HackrMux) SubmissionHandler(res http.ResponseWriter, req *http.Request) 
 	}
 }
 
-func (h HackrMux) PostSubmissionHandler(res http.ResponseWriter, req *http.Request) {
+func (h HackrHandlers) PostSubmissionHandler(res http.ResponseWriter, req *http.Request) {
 	var sreq *submitRequest
 	decoder := json.NewDecoder(req.Body)
 	if err := decoder.Decode(&sreq); err != nil {
@@ -71,8 +71,6 @@ func (h HackrMux) PostSubmissionHandler(res http.ResponseWriter, req *http.Reque
 
 	sres := submitResponse{Status: "OK", Error: "None"}
 
-	res.Header().Set("Access-Control-Allow-Origin", "*")
-	res.Header().Set("Access-Control-Allow-Headers", "X-Requested-With")
 	res.Header().Set("Content-Type", "application/json")
 	res.WriteHeader(http.StatusCreated)
 	encoder := json.NewEncoder(res)

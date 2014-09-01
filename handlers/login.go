@@ -13,7 +13,7 @@ type loginRequest struct {
 	PlaintextPassword string `json::"password"`
 }
 
-func (h HackrMux) LoginHandler(res http.ResponseWriter, req *http.Request) {
+func (h HackrHandlers) LoginHandler(res http.ResponseWriter, req *http.Request) {
 	switch req.Method {
 	case "POST":
 		h.PostLoginHandler(res, req)
@@ -22,7 +22,7 @@ func (h HackrMux) LoginHandler(res http.ResponseWriter, req *http.Request) {
 	}
 }
 
-func (h HackrMux) PostLoginHandler(res http.ResponseWriter, req *http.Request) {
+func (h HackrHandlers) PostLoginHandler(res http.ResponseWriter, req *http.Request) {
 	var lreq *loginRequest
 	decoder := json.NewDecoder(req.Body)
 	if err := decoder.Decode(&lreq); err != nil {
