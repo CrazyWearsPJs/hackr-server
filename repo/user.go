@@ -15,9 +15,9 @@ type UserRepo struct {
 
 func (r UserRepo) Add(u *user.User) error {
 
-	u_repo, err := r.FindUserByEmail(u.Email)
+	u_repo, _ := r.FindUserByEmail(u.Email)
 
-	if u_repo != nil || err != nil {
+	if u_repo != nil {
 		msg := fmt.Sprintf("User with the email %v already exists", u.Email)
 		return errors.New(msg)
 	}
@@ -30,7 +30,7 @@ func (r UserRepo) Add(u *user.User) error {
 		u.Created = time.Now()
 	}
 
-	_, err = r.Collection.UpsertId(u.Id, u)
+	_, err := r.Collection.UpsertId(u.Id, u)
 	return err
 }
 
@@ -40,6 +40,7 @@ func (r UserRepo) FindUserByEmail(email string) (*user.User, error) {
 	if err != nil {
 		return nil, err
 	}
+	fmt.Printf("wat")
 	return &u, nil
 }
 
