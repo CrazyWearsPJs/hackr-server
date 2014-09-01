@@ -36,7 +36,7 @@ func main() {
 	defer redis_conn.Close()
 
 	mongo_db := mongo_conn.DB(hackrdb)
-	hackrMux := handlers.HackrMux{Users: &repo.UserRepo{Collection: mongo_db.C("users")}}
+	hackrMux := &handlers.HackrMux{Users: &repo.UserRepo{Collection: mongo_db.C("users")}}
 	mux := hackrMux.SetupMux()
 
 	n := negroni.New(negroni.NewRecovery(), negroni.NewLogger(), negroni.NewStatic(http.Dir("app")))
